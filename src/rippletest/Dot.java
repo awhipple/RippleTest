@@ -4,6 +4,7 @@
  */
 package rippletest;
 
+import java.util.LinkedList;
 import java.util.List;
 import org.newdawn.slick.Image;
 
@@ -13,39 +14,34 @@ import org.newdawn.slick.Image;
  */
 public class Dot {
     
-    private VisualState state;
+    private VisualState state, drawState;
     private int x, y, drawX, drawY;
     private Image img;
     
-    public Dot() {
-        state = new VisualState(10,255,255,255);
-        img = PremadeDots.getDot(state.getRadius());
-        x = 100;
-        y = 100;
-    }
-    
     public Dot(int x, int y, int radius) {
-        state = new VisualState(radius, 255, 0, 0);
+        state = new VisualState(0, 0, 0, 0);
+        drawState = state;
         img = PremadeDots.getDot(state.getRadius());
         this.x = x;
         this.y = y;
     }
     
     public void update(List<Ripple> ripples) {
-        int radius = state.getRadius();
+        List<TransitionElement> teList = new LinkedList<>();
+        for(Ripple ripple : ripples) {
+            int dist = ripple.distFromPerimeter(x,y);
+            float alpha = dist < 200 ? 1 - (float)dist/200 : 0;
+            teList.add(new TransitionElement(ripple.getState(), alpha));
+        }
+        if(teList.size()>=1)drawState = state.transitionTo(teList);
+        
+        int radius = drawState.getRadius();
         drawX = x - radius;
         drawY = y - radius;
-        
-        for(Ripple ripple : ripples) {
-            int distX = x - ripple.getX(),
-                distY = y - ripple.getY(),
-                ripRad = ripple.getRadius();
-            if(distX * distX + distY * distY < ripRad*ripRad)
-                state.setColor(0, 255, 0);
-        }
+        img = PremadeDots.getDot(radius);
     }
     
     public void draw() {
-        img.draw(drawX, drawY, 1, state.getColor());
+        img.draw(drawX, drawY, 1, drawState.getColor());
     }
 }
