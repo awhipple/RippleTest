@@ -13,7 +13,7 @@ import org.newdawn.slick.Image;
 public class Ripple {
     private VisualState state;
     private int x, y, radius, speed;
-    private float rad;
+    private float rad, alpha, alphaSpeed;
     private Image img;
    
     public Ripple(int x, int y) {
@@ -23,20 +23,30 @@ public class Ripple {
         rad = 1;
         radius = (int)rad;
         speed = 250;
+        alpha = 1;
+        alphaSpeed = 0;
     }
     
-    public Ripple(int x, int y, int r, int g, int b) {
-        state = new VisualState(20, r, g, b);
+    public Ripple(int x, int y, int radius, int r, int g, int b) {
+        state = new VisualState(radius, r, g, b);
         this.x = x;
         this.y = y;
         rad = 1;
         radius = (int)rad;
-        speed = 250;
+        speed = 0;
+        alpha = 0;
+        alphaSpeed = 2f;
     }
     
     public void update() {
         rad += speed * (1f/60f);
         radius = (int)rad;
+        
+        alpha += alphaSpeed * (1f/60f);
+        if(alpha > 1) {
+            alpha = 1;
+            speed = 250;
+        }
     }
     
     public void draw() {
@@ -47,6 +57,7 @@ public class Ripple {
     public int getX(){return x;}
     public int getY(){return y;}
     public int getRadius(){return radius;}
+    public float getAlpha(){return alpha;}
     public VisualState getState() {return state;}
     
     public int distFromPerimeter(int x, int y) {
