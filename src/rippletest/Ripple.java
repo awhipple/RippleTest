@@ -15,6 +15,7 @@ public class Ripple {
     private int x, y, radius, speed;
     private float rad, alpha, alphaSpeed;
     private Image img;
+    private int updatesSinceLastEffect = 0;
    
     public Ripple(int x, int y) {
         state = new VisualState(20, 0, 0, 255);
@@ -47,11 +48,21 @@ public class Ripple {
             alpha = 1;
             speed = 250;
         }
+        updatesSinceLastEffect++;
     }
     
     public void draw() {
         img = PremadeDots.getDot(radius);
         img.draw(x-radius,y-radius);
+    }
+    
+    public void markInFrame() {
+        updatesSinceLastEffect = 0;
+    }
+    
+    public boolean outOfFrame() {
+        if(updatesSinceLastEffect < 200) return false;
+        else return true;
     }
     
     public int getX(){return x;}

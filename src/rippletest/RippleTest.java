@@ -24,6 +24,7 @@ public class RippleTest extends BasicGame {
     
     private List<Dot> dots = new LinkedList<>();
     private List<Ripple> ripples = new LinkedList<>();
+    private List<Ripple> delRipples = new LinkedList<>();
     
     @Override
     public void init(GameContainer gc) throws SlickException {
@@ -46,7 +47,14 @@ public class RippleTest extends BasicGame {
             ripples.add(new Ripple(mouseX, mouseY, 20, (int)(Math.random()*256), (int)(Math.random()*256), (int)(Math.random()*256)));
         }
         
-        for(Ripple ripple : ripples) ripple.update();
+        for(Ripple ripple : ripples) {
+            ripple.update();
+            if(ripple.outOfFrame()) delRipples.add(ripple);
+        }
+        while(delRipples.size() > 0) {
+            Ripple delRipple = delRipples.remove(0);
+            ripples.remove(delRipple);
+        }
         for(Dot dot : dots) dot.update(ripples);
         
         PremadeDots.checkUnrenderedDots();
@@ -57,7 +65,8 @@ public class RippleTest extends BasicGame {
     @Override
     public void render(GameContainer gc, Graphics grphcs) throws SlickException {
         for(Dot dot : dots) dot.draw();
-        //for(Ripple ripple : ripples) ripple.draw();
+        
+        for(Ripple ripple : ripples) ripple.draw();
     }
         
     public static void main(String[] args) {

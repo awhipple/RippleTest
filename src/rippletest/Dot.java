@@ -31,6 +31,7 @@ public class Dot {
         for(Ripple ripple : ripples) {
             int dist = ripple.distFromPerimeter(x,y);
             float alpha = dist < 200 ? (ripple.getAlpha() * (1 - (float)dist/200)) : 0;
+            if(alpha != 0) ripple.markInFrame();
             teList.add(new TransitionElement(ripple.getState(), alpha));
         }
         if(teList.size()>=1)drawState = state.transitionTo(teList);
