@@ -16,7 +16,7 @@ import org.newdawn.slick.SlickException;
  * @author Aaron
  */
 public class PremadeDots {
-    private static final int MAX_RADIUS = 100;
+    private static final int MAX_RADIUS = 25;
     
     private static Image[] dots = new Image[MAX_RADIUS+1];
     
@@ -27,7 +27,10 @@ public class PremadeDots {
     }
     
     public static Image getDot(int radius) {
-        if(radius > MAX_RADIUS) radius = MAX_RADIUS;
+        if(radius > MAX_RADIUS) {
+            System.out.println("Requested dot size " + radius + " exceeds max radius of " + MAX_RADIUS);
+            radius = MAX_RADIUS;
+        }
         renderDot(radius);
         return dots[radius];
     }

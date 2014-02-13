@@ -66,7 +66,7 @@ public class RippleTest extends BasicGame {
     public void render(GameContainer gc, Graphics grphcs) throws SlickException {
         for(Dot dot : dots) dot.draw();
         
-        for(Ripple ripple : ripples) ripple.draw();
+        //for(Ripple ripple : ripples) ripple.draw();
     }
         
     public static void main(String[] args) {
